@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIGEK: Rak Maya Digital Geliga Lestari</title>
-
-<!-- Favicon (Ikon Tab Browser) -->
-<link rel="icon" type="image/png" href="https://i.postimg.cc/mgzMWZpq/logo-geliga-lestari.png">
-<!-- Ikon untuk iPhone/Mobile -->
-<link rel="apple-touch-icon" href="https://i.postimg.cc/mgzMWZpq/logo-geliga-lestari.png">
+    
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/mgzMWZpq/logo-geliga-lestari.png">
     
     <!-- Library -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,38 +20,61 @@
         .font-sans-bold { font-family: 'Montserrat', sans-serif; font-weight: 800; }
         .font-story { font-family: 'Baloo 2', cursive; }
 
-        /* Story Grid */
+        /* Grid */
         #story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 15px; padding: 10px; }
         .story-card { background: white; border: 2px solid #3498db; border-radius: 20px; padding: 15px; cursor: pointer; transition: 0.3s; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .story-card.read { opacity: 0.6; filter: grayscale(0.5); border: 2px solid #22c55e; background: #f0fdf4; }
         .read-badge { background: #22c55e; color: white; font-size: 8px; padding: 2px 8px; border-radius: 10px; margin-top: 5px; font-weight: 900; }
 
-        /* Milestone Awards */
         .milestone-card { background: white; border-radius: 20px; padding: 12px; text-align: center; transition: 0.3s; border: 2px dashed #cbd5e1; opacity: 0.3; }
         .milestone-card.active { opacity: 1; border: 2px solid #22c55e; background: #f0fdf4; transform: scale(1.05); cursor: pointer; }
 
-        /* Anti-Skroll Timer */
         #reading-timer-display { font-size: 13px; color: #ef4444; font-weight: bold; margin-top: 10px; animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .btn-finish { display: none; background: #22c55e; color: white; padding: 12px 30px; border-radius: 50px; font-weight: bold; margin-top: 15px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4); }
 
-        /* Certificate Styles */
+        /* Sijil */
         #certificate-wrapper { position: absolute; left: -9999px; top: 0; }
         #certificate-template { width: 297mm; height: 209mm; background: white; color: #1a2a6c; box-sizing: border-box; padding: 8mm; position: relative; overflow: hidden; }
         #cert-inner { border: 5px double #d4af37; height: 100%; box-sizing: border-box; position: relative; text-align: center; padding-top: 5mm; background: #fff; }
         .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.04; width: 400px; z-index: 0; pointer-events: none; }
 
         #loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+
+        /* Custom Modal Style (Selesaikan masalah Sandboxed Google Site) */
+        #admin-modal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            z-index: 3000; align-items: center; justify-content: center;
+        }
+        .modal-box {
+            background: white; padding: 30px; border-radius: 30px; 
+            max-width: 350px; w: full; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
+    <!-- Loading Overlay -->
     <div id="loading-overlay">
         <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
-        <p id="loading-text" class="font-bold text-blue-700 uppercase tracking-widest text-xs">Menjana Sijil Hero...</p>
+        <p id="loading-text" class="font-bold text-blue-700 uppercase tracking-widest text-xs">Memproses...</p>
     </div>
 
-    <!-- 1. LOGIN SECTION (INTERFACE KP32) -->
+    <!-- CUSTOM MODAL ADMIN (Ganti prompt() yang kena block) -->
+    <div id="admin-modal">
+        <div class="modal-box">
+            <h3 class="font-kids text-xl text-blue-700 mb-4">PENGESAHAN CIKGU</h3>
+            <p class="text-xs text-gray-500 mb-4 font-bold uppercase">Sila masukkan kata laluan</p>
+            <input type="password" id="admin-pw" class="w-full p-3 border-2 border-blue-100 rounded-xl mb-4 text-center" placeholder="KATA LALUAN">
+            <div class="flex gap-2">
+                <button onclick="sahAdmin()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">Masuk</button>
+                <button onclick="tutupAdminModal()" class="flex-1 bg-gray-100 text-gray-500 py-3 rounded-xl font-bold">Batal</button>
+            </div>
+            <p id="error-admin" class="text-red-500 text-[10px] mt-2 hidden">Kata laluan salah!</p>
+        </div>
+    </div>
+
+    <!-- 1. LOGIN SECTION (KP32 Interface) -->
     <div id="login-section" class="max-w-md mx-auto mt-12 bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl text-center border-4 border-white">
         <img src="https://i.postimg.cc/mgzMWZpq/logo-geliga-lestari.png" class="w-24 mx-auto mb-4">
         <h2 class="font-kids text-3xl text-blue-700 mb-1">HERO RAK MAYA</h2>
@@ -67,9 +87,8 @@
         <input type="text" id="input-name" placeholder="TAIP NAMA ANDA DI SINI" class="w-full p-4 border-2 border-blue-100 rounded-2xl mb-4 text-center font-bold shadow-inner focus:outline-none focus:border-blue-400 uppercase">
         <button onclick="startApp()" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-bold shadow-lg hover:bg-blue-700 active:scale-95 transition-all">Mula Membaca</button>
         
-        <!-- BUTANG ADMIN UNTUK POPUP PASSWORD -->
-        <button onclick="bukaAdmin()" class="mt-8 text-gray-300 hover:text-blue-400 text-xs flex items-center justify-center gap-1 mx-auto transition-all">
-            🔐 Mod Admin 
+        <button onclick="bukaAdminModal()" class="mt-8 text-gray-300 hover:text-blue-400 text-xs flex items-center justify-center gap-1 mx-auto transition-all">
+            🔐 Mod Admin (Cikgu)
         </button>
     </div>
 
@@ -82,25 +101,23 @@
                 <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">Unit Pemulihan Khas SK Kuala Muput</p>
             </div>
             <div class="flex flex-col gap-1">
-                <button onclick="logout()" class="text-[9px] bg-red-50 p-2 rounded-lg font-bold text-red-600 uppercase border border-red-100">Log Keluar</button>
-                <!-- ADMIN BUTTON DALAM RAK -->
-                <button onclick="bukaAdmin()" class="text-[8px] text-gray-400 hover:text-blue-500 font-bold uppercase">🔐 Admin</button>
+                <button onclick="logout()" class="text-[9px] bg-red-100 p-2 rounded-lg font-bold text-red-600 uppercase border border-red-200">Log Keluar</button>
+                <button onclick="bukaAdminModal()" class="text-[8px] text-gray-400 hover:text-blue-500 font-bold uppercase">🔐 Admin</button>
             </div>
         </header>
 
-        <!-- Awards Area -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8 text-center">
-            <div id="m5" class="milestone-card"><div class="text-2xl">🥉</div><div class="text-[10px] font-bold text-gray-800 uppercase leading-tight mt-1">Hero Harapan<br>(5 Cerita)</div></div>
-            <div id="m10" class="milestone-card"><div class="text-2xl">🥈</div><div class="text-[10px] font-bold text-gray-800 uppercase leading-tight mt-1">Hero Bijak<br>(10 Cerita)</div></div>
-            <div id="m15" class="milestone-card"><div class="text-2xl">🥇</div><div class="text-[10px] font-bold text-gray-800 uppercase leading-tight mt-1">Hero Hebat<br>(15 Cerita)</div></div>
-            <div id="m23" class="milestone-card"><div class="text-2xl">💎</div><div class="text-[10px] font-bold text-gray-800 uppercase leading-tight mt-1">Super Hero<br>(23 Cerita)</div></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8 text-center text-[10px] font-bold">
+            <div id="m5" class="milestone-card"><div>🥉</div><div class="mt-1">Hero Harapan<br>(5 Cerita)</div></div>
+            <div id="m10" class="milestone-card"><div>🥈</div><div class="mt-1">Hero Bijak<br>(10 Cerita)</div></div>
+            <div id="m15" class="milestone-card"><div>🥇</div><div class="mt-1">Hero Hebat<br>(15 Cerita)</div></div>
+            <div id="m23" class="milestone-card"><div>💎</div><div class="mt-1">Super Hero<br>(23 Cerita)</div></div>
         </div>
 
         <div id="story-display-area" class="hidden bg-white p-6 md:p-10 rounded-[3rem] shadow-2xl border-4 border-white mb-10 text-left">
             <div id="story-content" class="font-story text-xl md:text-2xl leading-relaxed text-gray-700"></div>
             <div class="flex flex-col items-center border-t-2 border-dashed border-gray-100 mt-8 pt-8">
-                <div id="reading-timer-display">Sila baca... Butang pengesahan muncul dalam <span id="timer-seconds">20</span>s</div>
-                <button id="btn-sahkan-bacaan" onclick="confirmRead()" class="btn-finish uppercase">Saya Dah Habis Baca 🏆</button>
+                <div id="reading-timer-display">Butang muncul dalam <span id="timer-seconds">20</span>s</div>
+                <button id="btn-sahkan-bacaan" onclick="confirmRead()" class="btn-finish">SAYA DAH HABIS BACA & FAHAM 🏆</button>
                 <div class="flex gap-4 mt-6">
                     <button id="translate-btn" class="bg-yellow-400 text-blue-900 px-6 py-2 rounded-full font-bold text-xs shadow-md"></button>
                     <button onclick="closeStory()" class="text-gray-400 text-xs underline">Tutup</button>
@@ -108,18 +125,17 @@
             </div>
         </div>
 
-        <div class="bg-white/50 p-4 rounded-2xl mb-6 flex items-center justify-between border-2 border-white uppercase text-xs font-bold text-blue-700">
-            <span>Kemajuan Hero:</span>
+        <div class="bg-white/50 p-4 rounded-2xl mb-6 flex items-center justify-between border-2 border-white text-xs font-bold text-blue-700 uppercase">
+            <span>Kemajuan:</span>
             <span id="progress-text" class="font-kids text-blue-600 text-xl tracking-widest">0/23</span>
         </div>
-
         <div id="story-grid"></div>
 
         <footer class="mt-16 border-t border-gray-200 pt-8 text-center space-y-4 pb-12">
             <div class="font-kids text-xl md:text-3xl tracking-widest uppercase text-center">
                 <span style="color:#ef4444">S</span>mart <span style="color:#3b82f6">I</span>mpact <span style="color:#22c55e">G</span>ear <span style="color:#f97316">E</span>ffective <span style="color:#a855f7">K</span>it
             </div>
-            <div class="bg-blue-600 text-white inline-block px-8 py-3 rounded-full text-[10px] md:text-xs font-bold uppercase shadow-lg font-black font-sans text-center">
+            <div class="bg-blue-600 text-white inline-block px-8 py-3 rounded-full text-[10px] md:text-xs font-bold uppercase shadow-lg font-black font-sans">
                 Inovasi Digital Oleh Cikgu Dayangku Nurul Akmal binti Awang Mustapha
             </div>
             <div class="text-gray-400 text-[10px] font-black italic tracking-widest uppercase font-sans font-bold text-center">
@@ -128,7 +144,7 @@
         </footer>
     </div>
 
-    <!-- 3. SIJIL TEMPLATE -->
+    <!-- 3. SIJIL -->
     <div id="certificate-wrapper">
         <div id="certificate-template">
             <div id="cert-inner">
@@ -154,7 +170,7 @@
                 <div style="position: absolute; bottom: 10mm; right: 20mm; text-align: center; width: 280px; z-index: 20;">
                     <img src="https://i.postimg.cc/qqRYXLKj/sign-aku.png" style="height: 65px; margin: 0 auto -15px auto; display: block; mix-blend-mode: multiply;">
                     <div style="border-top: 2px solid #1a2a6c; padding-top: 5px;">
-                        <p class="font-sans-bold" style="margin: 0; font-size: 12px; color: #1a2a6c; text-transform: uppercase;">CIKGU DAYANGKU NURUL AKMAL BINTI AWANG MUSTAPHA</p>
+                        <p class="font-sans-bold" style="margin: 0; font-size: 11px; color: #1a2a6c; text-transform: uppercase;">CIKGU DAYANGKU NURUL AKMAL BINTI AWANG MUSTAPHA</p>
                         <p style="margin: 0; font-family: 'Quicksand', sans-serif; font-size: 10px; color: #555;">Inovator Digital SIGEK</p>
                     </div>
                 </div>
@@ -173,7 +189,7 @@
             { id: 4, title: "Gagak & Takar Air", emoji: "🐦", content_ms: { story: `Pada hari panas ☀️, seekor gagak sangat dahaga. Dia ternampak sebuah takar air, tetapi air sedikit and paruhnya tidak sampai. Gagak mendapat idea 💡. Dia memungut batu kerikil and memasukkannya ke dalam takar satu persatu. Setiap batu yang masuk menaikkan aras air. Selepas memasukkan banyak batu, akhirnya aras air naik cukup tinggi untuk dia minum. Gagak minum sepuasnya and belajar bahawa dengan akal, masalah sukar dapat diatasi.`, moral: "Nilai Moral: Gunakan akal fikiran dan berusaha, pasti ada jalan penyelesaian." }, content_en: { story: `On a hot day ☀️, a thirsty crow found a pitcher of water, but it was too low. He got an idea 💡. He dropped pebbles into the pitcher one by one. Each pebble raised the water level. Finally, it was high enough to drink. He learned that intelligence and effort solve problems.`, moral: "Moral Value: Use your mind and make an effort, and you will find a solution." } },
             { id: 5, title: "Semut & Belalang", emoji: "🐜", content_ms: { story: `Musim panas, seekor belalang asyik menyanyi 🎶 manakala semut rajin kumpul makanan. "Kenapa bekerja keras? Mari bergembira!" ejek belalang. Semut menyimpan makanan untuk musim sejuk ❄️. Musim sejuk tiba, salji menutupi bumi. Belalang lapar and kesejukan. Dia meminta makanan dari semut. Walaupun pernah diejek, semut tetap menolong belalang. Belalang menyesal and berjanji akan rajin berusaha.`, moral: "Nilai Moral: Kita mestilah rajin berusaha dan bersedia untuk menghadapi masa depan." }, content_en: { story: `In summer, a grasshopper sang 🎶 while ants stored food. "Why work so hard?" he mocked. The ants prepared for winter ❄️. When winter came, the grasshopper had no food. He asked the ants for help. They shared their food, and the grasshopper learned the importance of preparing for the future.`, moral: "Moral Value: We must work hard and be prepared for the future." } },
             { id: 6, title: "Anak Itik Hodoh", emoji: "🦢", content_ms: { story: `Seekor anak itik kelabu sering diejek "Hodoh!" oleh haiwan lain. Dia berasa sedih and melarikan diri ke tasik. Musim berlalu, anak itik itu membesar. Suatu hari, dia melihat bayangnya di air. Dia bukan lagi itik kelabu, tetapi telah bertukar menjadi angsa putih yang anggun 🦢. Burung-burung cantik lain menyambutnya dengan gembira. Dia akhirnya menemui keluarga sebenarnya.`, moral: "Nilai Moral: Jangan menilai seseorang dari rupa luaran kerana kecantikan sebenar ada di dalam." }, content_en: { story: `A gray duckling was teased for being "Ugly!". He ran away to a lake. Seasons passed, and he grew bigger. One day, he saw his reflection. He was no longer a gray duckling but a beautiful white swan 🦢. He finally found where he belonged.`, moral: "Moral Value: Don't judge someone by their appearance, for true beauty lies within." } },
-            { id: 7, title: "Penggembala & Serigala", emoji: "🐺", content_ms: { story: `Budak penggembala biri-biri 🐑 berasa bosan and menipu orang kampung dengan menjerit "Serigala!". Orang kampung berlari menolong tetapi budak itu hanya ketawa 😆. Dia mengulanginya lagi. Suatu hari, serigala 🐺 betul-betul datang. Budak itu menjerit minta tolong, tetapi tiada siapa datang kerana menyangka dia menipu lagi. Banyak biri-birinya dimakan serigala.`, moral: "Nilai Moral: Jangan sekali-kali berbohong, kerana orang tidak akan mempercayai kita lagi walaupun kita bercakap benar." }, content_en: { story: `A shepherd boy 🐑 tricked villagers by shouting "Wolf!". They ran to help, but he just laughed 😆. He did it again. One day, a real wolf 🐺 came. The boy cried for help, but no one came because they thought he was lying. He lost many sheep and learned his lesson.`, moral: "Moral Value: Never tell lies, because people will no longer believe you." } },
+            { id: 7, title: "Si Penggembala & Serigala", emoji: "🐺", content_ms: { story: `Budak penggembala biri-biri 🐑 berasa bosan and menipu orang kampung dengan menjerit "Serigala!". Orang kampung berlari menolong tetapi budak itu hanya ketawa 😆. Dia mengulanginya lagi. Suatu hari, serigala 🐺 betul-betul datang. Budak itu menjerit minta tolong, tetapi tiada siapa datang kerana menyangka dia menipu lagi. Banyak biri-birinya dimakan serigala.`, moral: "Nilai Moral: Jangan sekali-kali berbohong, kerana orang tidak akan mempercayai kita lagi walaupun kita bercakap benar." }, content_en: { story: `A shepherd boy 🐑 tricked villagers by shouting "Wolf!". They ran to help, but he just laughed 😆. He did it again. One day, a real wolf 🐺 came. The boy cried for help, but no one came because they thought he was lying. He lost many sheep and learned his lesson.`, moral: "Moral Value: Never tell lies, because people will no longer believe you." } },
             { id: 8, title: "Dua Ekor Kambing", emoji: "🐐", content_ms: { story: `Dua ekor kambing 🐐 yang degil bertemu di tengah titi yang sempit. Tiada siapa mahu mengalah. "Beri laluan!" "Tidak, kamu yang patut berundur!". Mereka mula bertengkar and menanduk antara satu sama lain. Akibatnya, kedua-dua kambing hilang keseimbangan and jatuh ke dalam sungai deras di bawah. Mereka dihanyutkan oleh arus air.`, moral: "Nilai Moral: Sikap degil dan tidak mahu bertolak ansur akan membawa padah. Bertimbang rasa lebih baik." }, content_en: { story: `Two stubborn goats 🐐 met on a narrow bridge. Neither would give way. They started to fight and headbutt each other. Because of their stubbornness, they both fell into the rushing river and were swept away.`, moral: "Moral Value: Stubbornness and unwillingness to compromise will lead to disaster." } },
             { id: 9, title: "Pari-pari & Kapak", emoji: "🧚", content_ms: { story: `Pemotong kayu yang jujur kehilangan kapak besinya ke dalam sungai 🌊. Pari-pari muncul and menunjukkan kapak emas, kemudian kapak perak, tetapi dia menolaknya. Akhirnya, apabila pari-pari menunjukkan kapak besinya yang asal, dia mengakuinya dengan gembira. Pari-pari kagum dengan kejujurannya and menghadiahkan ketiga-tiga kapak tersebut.`, moral: "Nilai Moral: Sifat jujur akan sentiasa membawa kebaikan dan ganjaran yang tidak dijangka." }, content_en: { story: `An honest woodcutter dropped his iron axe in a river 🌊. A fairy showed him gold and silver axes, but he said they weren't his. When she showed his old axe, he happily said "Yes!". The fairy gave him all three axes for his honesty.`, moral: "Moral Value: Honesty will always bring goodness and unexpected rewards." } },
             { id: 10, title: "Angsa Telur Emas", emoji: "💰", content_ms: { story: `Petani mempunyai angsa yang bertelur emas 🥚 setiap hari. Kerana tamak, dia mahu mengambil semua emas sekaligus. Mereka membelah perut angsa itu, tetapi mendapati ia sama seperti angsa biasa. Tiada emas di dalamnya. Mereka telah membunuh punca kekayaan mereka and kembali menjadi miskin kerana tidak sabar.`, moral: "Nilai Moral: Jangan tamak haloba, kelak diri sendiri yang akan menanggung kerugian." }, content_en: { story: `A farmer had a goose that laid golden eggs 🥚. Greedy for more, he killed the goose to take all the gold at once. He found nothing inside. He lost his wealth because of greed and impatience.`, moral: "Moral Value: Do not be greedy, for it will only harm yourself." } },
@@ -197,9 +213,11 @@
         let currentStoryTitle = "";
         let readingTimer;
 
-        // FUNGSI TITLE CASE (Nurul Akmal)
+        // FUNGSI TITLE CASE (Contoh: Nurul Akmal)
         function toTitleCase(str) {
-            return str.toLowerCase().trim().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            return str.toLowerCase().trim().split(' ').map(function(word) {
+                return (word.charAt(0).toUpperCase() + word.slice(1));
+            }).join(' ');
         }
 
         async function startApp() {
@@ -209,7 +227,6 @@
             currentUser = toTitleCase(nameInput); 
             localStorage.setItem('sigek_user', currentUser);
             
-            // Masuk ke rak utama
             document.getElementById('login-section').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
             document.getElementById('user-display').innerText = "Hero: " + currentUser;
@@ -235,7 +252,11 @@
                 const isRead = readStories.includes(s.title);
                 const card = document.createElement('div');
                 card.className = `story-card ${isRead ? 'read' : ''}`;
-                card.innerHTML = `<div class="text-3xl mb-2">${s.emoji}</div><div class="text-[9px] font-black uppercase text-center leading-tight">${s.title}</div>${isRead ? '<div class="read-badge">TAMAT ✅</div>' : '<div class="text-[8px] text-blue-400 mt-1 uppercase font-bold">Belum Baca</div>'}`;
+                card.innerHTML = `
+                    <div class="text-3xl mb-2">${s.emoji}</div>
+                    <div class="text-[9px] font-black uppercase text-center leading-tight">${s.title}</div>
+                    ${isRead ? '<div class="read-badge">TAMAT ✅</div>' : '<div class="text-[8px] text-blue-400 mt-1 uppercase font-bold">Belum Baca</div>'}
+                `;
                 card.onclick = () => openStory(s.id);
                 grid.appendChild(card);
             });
@@ -250,14 +271,18 @@
                 {id: 'm15', n: 15, full: 'Sijil Emas (Hero Hebat)', desc: 'Menamatkan Pembacaan 15 Cerita dalam Rak Maya Geliga Lestari'},
                 {id: 'm23', n: 23, full: 'Sijil Berlian (Super Hero Rak Maya)', desc: 'Menamatkan Kesemua 23 Cerita dalam Rak Maya Geliga Lestari'}
             ];
+
             milestones.forEach(m => {
                 const el = document.getElementById(m.id);
                 if(count >= m.n) {
                     el.classList.add('active');
                     el.onclick = () => janaSijil(m.full, m.desc);
-                    if(!el.innerHTML.includes('TEBUS')) el.innerHTML += `<div class="text-[7px] text-green-600 font-black mt-1 animate-pulse uppercase">Tebus 📜</div>`;
+                    if(!el.innerHTML.includes('TEBUS')) {
+                        el.innerHTML += `<div class="text-[7px] text-green-600 font-black mt-1 animate-pulse uppercase">Tebus 📜</div>`;
+                    }
                 } else {
-                    el.classList.remove('active'); el.onclick = null;
+                    el.classList.remove('active');
+                    el.onclick = null;
                 }
             });
         }
@@ -267,31 +292,53 @@
             currentStoryTitle = s.title;
             const data = lang === 'ms' ? s.content_ms : s.content_en;
             const content = document.getElementById('story-content');
+            
             content.innerHTML = data.story.split(/(\s+)/).map(w => {
                 if(w.trim().length === 0) return w;
                 return `<span onclick="speak('${w.replace(/[.,!?;:]/g, '')}', '${lang}')" class="hover:bg-yellow-200 cursor-pointer p-0.5 rounded transition-all">${w}</span>`;
             }).join('');
+
             content.innerHTML += `<div class="mt-8 p-4 bg-blue-50 border-l-4 border-blue-400 text-sm font-bold italic rounded-r-xl">${data.moral}</div>`;
+            
             document.getElementById('translate-btn').innerText = lang === 'ms' ? 'English Version 🇬🇧' : 'Versi Melayu 🇲🇾';
             document.getElementById('translate-btn').onclick = () => openStory(id, lang === 'ms' ? 'en' : 'ms');
+            
             clearInterval(readingTimer);
             document.getElementById('btn-sahkan-bacaan').style.display = 'none';
             document.getElementById('reading-timer-display').style.display = 'block';
-            let timeLeft = 20; document.getElementById('timer-seconds').innerText = timeLeft;
+            let timeLeft = 20; 
+            document.getElementById('timer-seconds').innerText = timeLeft;
+
             document.getElementById('story-display-area').classList.remove('hidden');
             window.scrollTo({top: 0, behavior: 'smooth'});
+
             readingTimer = setInterval(() => {
-                timeLeft--; document.getElementById('timer-seconds').innerText = timeLeft;
-                if(timeLeft <= 0) { clearInterval(readingTimer); document.getElementById('reading-timer-display').style.display = 'none'; document.getElementById('btn-sahkan-bacaan').style.display = 'block'; }
+                timeLeft--;
+                document.getElementById('timer-seconds').innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    clearInterval(readingTimer);
+                    document.getElementById('reading-timer-display').style.display = 'none';
+                    document.getElementById('btn-sahkan-bacaan').style.display = 'block';
+                }
             }, 1000);
         }
 
         function confirmRead() {
             if(!readStories.includes(currentStoryTitle)) {
-                readStories.push(currentStoryTitle); renderGrid(); updateMilestonesUI();
-                fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ name: currentUser, storyTitle: currentStoryTitle }) });
-                alert("Bagus! Rekod Hero anda telah dikemaskini. ✨"); closeStory();
-            } else { alert("Buku ini sudah ada dalam rekod anda."); closeStory(); }
+                readStories.push(currentStoryTitle);
+                renderGrid();
+                updateMilestonesUI();
+                fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: JSON.stringify({ name: currentUser, storyTitle: currentStoryTitle })
+                });
+                alert("Bagus! Rekod Hero anda telah dikemaskini. ✨");
+                closeStory();
+            } else {
+                alert("Buku ini sudah pun ada dalam rekod anda.");
+                closeStory();
+            }
         }
 
         async function janaSijil(title, desc) {
@@ -300,42 +347,88 @@
             document.getElementById('cert-hero-title').innerText = title;
             document.getElementById('cert-hero-desc').innerText = desc;
             document.getElementById('cert-tarikh').innerText = "Tarikh: " + new Date().toLocaleDateString('ms-MY', {day:'numeric', month:'long', year:'numeric'});
+
             const element = document.getElementById('certificate-template');
             const wrapper = document.getElementById('certificate-wrapper');
             wrapper.style.left = '0';
-            const opt = { margin: 0, filename: `Sijil_Hero_${currentUser}.pdf`, image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 3, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } };
-            try { await html2pdf().set(opt).from(element).save(); } finally { wrapper.style.left = '-9999px'; hideLoading(); }
+
+            const opt = {
+                margin: 0,
+                filename: `Sijil_Hero_${currentUser}.pdf`,
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 3, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            };
+
+            try { await html2pdf().set(opt).from(element).save(); } finally {
+                wrapper.style.left = '-9999px';
+                hideLoading();
+            }
         }
 
-        function speak(w, l) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(w); u.lang = (l === 'ms' ? 'ms-MY' : 'en-US'); u.rate = 0.9; window.speechSynthesis.speak(u); }
-        function closeStory() { document.getElementById('story-display-area').classList.add('hidden'); clearInterval(readingTimer); }
-        function showLoading(m) { document.getElementById('loading-overlay').style.display = 'flex'; document.getElementById('loading-text').innerText = m; }
-        function hideLoading() { document.getElementById('loading-overlay').style.display = 'none'; }
-        function logout() { localStorage.clear(); location.reload(); }
+        function speak(w, l) { 
+            window.speechSynthesis.cancel(); 
+            const u = new SpeechSynthesisUtterance(w); 
+            u.lang = (l === 'ms' ? 'ms-MY' : 'en-US'); 
+            u.rate = 0.9;
+            window.speechSynthesis.speak(u); 
+        }
 
+        function closeStory() { 
+            document.getElementById('story-display-area').classList.add('hidden'); 
+            clearInterval(readingTimer); 
+        }
+
+        function showLoading(m) { 
+            document.getElementById('loading-overlay').style.display = 'flex'; 
+            document.getElementById('loading-text').innerText = m; 
+        }
+
+        function hideLoading() { 
+            document.getElementById('loading-overlay').style.display = 'none'; 
+        }
+
+        function logout() { 
+            localStorage.clear(); 
+            location.reload(); 
+        }
+
+        // --- UPTIME LIVE ---
         const startDate = new Date("2025-07-02T00:00:00");
         function kemaskiniUptime() {
             const diff = new Date() - startDate;
-            const d = Math.floor(diff / 86400000); const h = Math.floor((diff % 86400000) / 3600000); const m = Math.floor((diff % 3600000) / 60000); const s = Math.floor((diff % 60000) / 1000);
-            if (document.getElementById('uptime')) document.getElementById('uptime').innerText = `${d} Hari, ${h} Jam, ${m} Minit, ${s} Saat`;
+            const d = Math.floor(diff / 86400000); 
+            const h = Math.floor((diff % 86400000) / 3600000); 
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            const uptimeElement = document.getElementById('uptime');
+            if (uptimeElement) {
+                uptimeElement.innerText = `${d} Hari, ${h} Jam, ${m} Minit, ${s} Saat`;
+            }
         }
-        kemaskiniUptime(); setInterval(kemaskiniUptime, 1000);
+        kemaskiniUptime(); 
+        setInterval(kemaskiniUptime, 1000);
 
-        function bukaAdmin() {
-            const pw = prompt("Masukkan Kata Laluan Admin:");
-            if (pw === "adminGeligaLestari") { 
+        // --- MOD ADMIN (TANPA PROMPT) ---
+        function bukaAdminModal() {
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
+
+        function tutupAdminModal() {
+            document.getElementById('admin-modal').style.display = 'none';
+            document.getElementById('error-admin').classList.add('hidden');
+            document.getElementById('admin-pw').value = '';
+        }
+
+        function sahAdmin() {
+            const pw = document.getElementById('admin-pw').value;
+            if (pw === "adminGeligaLestari") {
                 window.open(SHEET_URL, '_blank');
-            } else { alert("Kata laluan salah!"); }
+                tutupAdminModal();
+            } else {
+                document.getElementById('error-admin').classList.remove('hidden');
+            }
         }
-
-        // --- PEMBETULAN: PASTIKAN INTERFACE KP32 (LOGIN) KELUAR DULU ---
-        window.onload = () => {
-           const savedUser = localStorage.getItem('sigek_user');
-           if (savedUser) {
-               // Hanya isi nama dalam kotak, tapi JANGAN panggil startApp() automatik
-               document.getElementById('input-name').value = savedUser;
-           }
-        };
     </script>
 </body>
 </html>
