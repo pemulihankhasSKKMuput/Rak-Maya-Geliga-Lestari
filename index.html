@@ -50,7 +50,7 @@
 
     <div id="loading-overlay">
         <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
-        <p id="loading-text" class="font-bold text-blue-700 uppercase tracking-widest text-xs">Menjana Sijil Hero...</p>
+        <p id="loading-text" class="font-bold text-blue-700 uppercase tracking-widest text-xs">Memproses Data...</p>
     </div>
 
     <!-- 1. LOGIN SECTION -->
@@ -65,10 +65,11 @@
             </p>
         </div>
 
-        <input type="text" id="input-name" placeholder="TAIP NAMA ANDA DI SINI" class="w-full p-4 border-2 border-blue-100 rounded-2xl mb-4 text-center font-bold shadow-inner focus:outline-none focus:border-blue-400 uppercase">
+        <input type="text" id="input-name" placeholder="NAMA PENUH ANDA" class="w-full p-4 border-2 border-blue-100 rounded-2xl mb-4 text-center font-bold shadow-inner focus:outline-none focus:border-blue-400 uppercase">
         <button onclick="startApp()" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-bold shadow-lg hover:bg-blue-700 active:scale-95 transition-all">Mula Membaca</button>
         
-        <button onclick="bukaAdmin()" class="mt-8 text-gray-300 hover:text-blue-400 text-xs flex items-center justify-center gap-1 mx-auto">🔐 Dashboard Admin</button>
+        <!-- BUTTON ADMIN DI LOGIN -->
+        <button onclick="bukaAdmin()" class="mt-8 text-gray-300 hover:text-blue-400 text-xs flex items-center justify-center gap-1 mx-auto">🔐 Mod Admin (Cikgu)</button>
     </div>
 
     <!-- 2. MAIN APP CONTENT -->
@@ -79,7 +80,11 @@
                 <h1 id="user-display" class="text-xl font-kids text-blue-700 uppercase"></h1>
                 <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">Unit Pemulihan Khas SK Kuala Muput</p>
             </div>
-            <button onclick="logout()" class="text-[9px] bg-red-100 p-2 rounded-lg font-bold text-red-600 uppercase">Log Keluar</button>
+            <div class="flex flex-col gap-1">
+                <button onclick="logout()" class="text-[9px] bg-red-50 p-2 rounded-lg font-bold text-red-600 uppercase border border-red-100">Log Keluar</button>
+                <!-- BUTTON ADMIN DI HEADER -->
+                <button onclick="bukaAdmin()" class="text-[8px] text-gray-400 hover:text-blue-500 font-bold uppercase">🔐 Admin</button>
+            </div>
         </header>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
@@ -111,10 +116,10 @@
             <div class="font-kids text-xl md:text-3xl tracking-widest uppercase">
                 <span style="color:#ef4444">S</span>mart <span style="color:#3b82f6">I</span>mpact <span style="color:#22c55e">G</span>ear <span style="color:#f97316">E</span>ffective <span style="color:#a855f7">K</span>it
             </div>
-            <div class="bg-blue-600 text-white inline-block px-8 py-3 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest shadow-lg font-black font-sans">
+            <div class="bg-blue-600 text-white inline-block px-8 py-3 rounded-full text-[10px] md:text-xs font-bold uppercase shadow-lg font-black font-sans">
                 Inovasi Digital Oleh Cikgu Dayangku Nurul Akmal
             </div>
-            <div class="text-gray-400 text-[10px] font-black italic tracking-widest uppercase font-sans font-bold text-center">
+            <div id="uptime-display" class="text-gray-400 text-[10px] font-black italic tracking-widest uppercase font-sans font-bold">
                 Dibangunkan: 2 Julai 2025 | Sistem Beroperasi: <span id="uptime" class="text-blue-600 not-italic font-bold"></span>
             </div>
         </footer>
@@ -123,7 +128,7 @@
     <!-- ADMIN PANEL -->
     <div id="admin-panel" class="hidden max-w-4xl mx-auto mt-12 bg-white p-8 rounded-[3rem] shadow-2xl border-4 border-blue-100 text-center">
         <h2 class="font-kids text-2xl text-blue-700 mb-4 uppercase">Dashboard Rekod Hero</h2>
-        <div id="admin-content" class="overflow-x-auto"></div>
+        <div id="admin-content" class="overflow-x-auto min-h-[200px]"></div>
         <button onclick="tutupAdmin()" class="mt-8 bg-gray-100 text-gray-500 px-8 py-3 rounded-full font-bold text-sm">Kembali</button>
     </div>
 
@@ -146,7 +151,7 @@
                     </div>
                 </div>
                 <p style="font-family: 'Quicksand', sans-serif; font-size: 18px; position: relative; z-index: 10; margin: 5px 0;">Dengan ini disahkan bahawa</p>
-                <h3 id="cert-nama-murid" class="font-elegant" style="font-size: 50px; color: #1d4ed8; margin: 2px 0; line-height: 1; position: relative; z-index: 10;">Nama Murid</h3>
+                <h3 id="cert-nama-murid" class="font-elegant" style="font-size: 48px; color: #1d4ed8; margin: 2px 0; line-height: 1; position: relative; z-index: 10;">Nama Murid</h3>
                 <div style="width: 50%; height: 2px; background: linear-gradient(to right, transparent, #d4af37, transparent); margin: 0 auto 10px auto; position: relative; z-index: 10;"></div>
                 <p style="font-family: 'Quicksand', sans-serif; font-size: 18px; line-height: 1.4; position: relative; z-index: 10;">Telah menunjukkan kesungguhan luar biasa dan<br><strong id="cert-hero-desc">BERJAYA MENGUASAI SEPENUHNYA MODUL RAK MAYA DIGITAL</strong></p>
                 <p id="cert-tarikh" style="font-family: 'Quicksand', sans-serif; font-size: 14px; margin-top: 10px; font-weight: bold; color: #1a2a6c; position: relative; z-index: 10;">Tarikh: 27 Feb 2026</p>
@@ -177,7 +182,7 @@
             { id: 10, title: "Angsa Telur Emas", emoji: "💰", content_ms: { story: `Petani mempunyai angsa yang bertelur emas 🥚 setiap hari. Kerana tamak, dia mahu mengambil semua emas sekaligus. Mereka membelah perut angsa itu, tetapi mendapati ia sama seperti angsa biasa. Tiada emas di dalamnya. Mereka telah membunuh punca kekayaan mereka and kembali menjadi miskin kerana tidak sabar.`, moral: "Nilai Moral: Jangan tamak haloba, kelak diri sendiri yang akan menanggung kerugian." }, content_en: { story: `A farmer had a goose that laid golden eggs 🥚. Greedy for more, he killed the goose to take all the gold at once. He found nothing inside. He lost his wealth because of greed and impatience.`, moral: "Moral Value: Do not be greedy, for it will only harm yourself." } },
             { id: 11, title: "Kisah Pokok Epal", emoji: "🍎", content_ms: { story: `Budak lelaki sangat menyayangi pokok epal 🌳. Dia makan epalnya and tidur di bawah bayangnya. Apabila dewasa, dia memerlukan wang, lalu pokok memberikan semua epalnya untuk dijual. Kemudian dia memerlukan rumah, lalu pokok memberikan dahan-dahannya. Akhirnya, dia yang tua hanya perlukan tempat berehat, lalu pokok menawarkan tunggulnya.`, moral: "Nilai Moral: Hargailah pengorbanan ibu bapa kita yang sentiasa memberi tanpa mengharapkan balasan." }, content_en: { story: `A boy loved an apple tree 🌳. As he grew, the tree gave its apples for him to sell, then its branches to build a house. Finally, as an old man, he needed a place to rest, and the tree offered its stump. The tree gave everything to the boy it loved.`, moral: "Moral Value: Appreciate the sacrifices of our parents who give endlessly." } },
             { id: 12, title: "Nelayan & Ikan", emoji: "🐠", content_ms: { story: `Seorang nelayan menangkap ikan kecil 🐠. Ikan itu merayu dilepaskan and berjanji akan kembali apabila sudah besar. Nelayan bijak menjawab, "Seekor burung di tangan lebih baik daripada sepuluh di atas pokok. Walaupun kecil, kamu tetap rezeki saya hari ini." Nelayan membawa ikan itu pulang and belajar menghargai apa yang sudah dimiliki.`, moral: "Nilai Moral: Hargailah apa yang kita ada sekarang daripada mengharapkan sesuatu yang belum tentu." }, content_en: { story: `A fisherman caught a tiny fish 🐠 that begged to be let go, promising to return when bigger. The fisherman said, "A bird in hand is worth two in the bush." He kept the fish, appreciating what he had now.`, moral: "Moral Value: Appreciate what you have now rather than hoping for something uncertain." } },
-            { id: 13, title: "Helang Sombong", emoji: "🦅", content_ms: { story: `Helang 🦅 gagah sering mengejek siput 🐌 yang lambat. "Aku raja udara, tiada siapa tandingi aku!". Suatu hari, ribut kuat 🌪️ melanda gunung. Sayap helang patah and dia terhempas ke tanah. Dalam kesakitan, dia melihat siput yang diejeknya dahulu telah selamat sampai ke puncak gunung dengan berlindung di celah batu. Helang sedar kesombongan tidak bawa kebaikan.`, moral: "Nilai Moral: Jangan sombong dengan kelebihan diri kerana setiap makhluk ada kelemahannya." }, content_en: { story: `An eagle 🦅 mocked a slow snail 🐌. "I am king of the sky!". One day, a storm 🌪️ hit and the eagle's wing broke. He saw the snail safe at the top, sheltered by rocks. He realized that pride leads to a fall and everyone has weaknesses.`, moral: "Moral Value: Do not be arrogant about your strengths, as every creature has its weaknesses." } },
+            { id: 13, title: "Helang Sombong", emoji: "🦅", content_ms: { story: `Helang 🦅 gagah sering mengejek siput 🐌 yang lambat. "Aku raja udara, tiada siapa tandingi aku!". Suatu hari, ribut kuat 🌪️ melanda gunung. Sayap helang patah and dia terhempas ke tanah. Dalam kesakitan, dia melihat siput yang diejeknya dahulu telah selamat sampai ke puncak gunung dengan berlindung di celah batu. Helang sedar kesombongan tidak bawa kebaikan.`, moral: "Nilai Moral: Jangan sombong dengan kelebihan diri kerana setiap makhluk ada kelemahannya." }, content_en: { story: `An eagle 🦅 mocked a slow snail  snail 🐌. "I am king of the sky!". One day, a storm 🌪️ hit and the eagle's wing broke. He saw the snail safe at the top, sheltered by rocks. He realized that pride leads to a fall and everyone has weaknesses.`, moral: "Moral Value: Do not be arrogant about your strengths, as every creature has its weaknesses." } },
             { id: 14, title: "Landak & Ular", emoji: "🦔", content_ms: { story: `Musim sejuk, landak 🦔 menumpang di gua ular 🐍 yang baik hati. Namun, setiap kali ular bergerak, dia tercucuk duri landak. Gua itu terasa sempit. Ular meminta landak mencari tempat lain, tetapi landak menjawab, "Saya sangat selesa di sini. Jika kamu yang tidak selesa, kamulah yang patut keluar." Ular menyesal kerana terlalu baik kepada tetamu tidak bersyukur.`, moral: "Nilai Moral: Berhati-hatilah membantu orang lain, jangan sampai kebaikan kita disalahgunakan." }, content_en: { story: `In winter, a porcupine 🦔 stayed in a snake's cave 🐍. But his quills pricked the snake. When asked to leave, the porcupine said, "I am comfortable; you should leave if you aren't." The snake regretted being too kind to an ungrateful guest.`, moral: "Moral Value: Be careful when helping others, lest your kindness is taken advantage of." } },
             { id: 15, title: "Belalang Berani", emoji: "🦗", content_ms: { story: `Labah-labah gergasi mengancam serangga di padang rumput. Belalang 🦗 yang kecil mencabarnya bertanding lompatan. Belalang melompat lincah mengelirukan labah-labah, kemudian dia sengaja hinggap di atas bunga 🌸 yang mempunyai getah melekit. Labah-labah menerkam and terperangkap pada getah bunga itu. Belalang yang bijak telah menyelamatkan semua serangga.`, moral: "Nilai Moral: Keberanian dan kebijaksanaan lebih penting daripada saiz dan kekuatan fizikal." }, content_en: { story: `A giant spider threatened insects. A brave grasshopper 🦗 challenged him to a jumping contest. He confused the spider with quick jumps, then led him to a flower 🌸 with sticky sap. The spider got stuck, and the clever grasshopper saved everyone.`, moral: "Moral Value: Courage and wisdom are more important than size and physical strength." } },
             { id: 16, title: "Kucing & Loceng", emoji: "🔔", content_ms: { story: `Tikus takut pada kucing 😼 yang licik. Tikus muda cadangkan gantung loceng 🔔 pada leher kucing supaya mereka boleh dengar kedatangannya. Semua tikus bersorak "Bagus!". Namun, tikus tua bertanya, "Siapa yang berani pergi ikat loceng itu?". Tiada tikus yang berani. Mereka sedar idea hebat tidak berguna jika tidak dapat dilaksanakan.`, moral: "Nilai Moral: Mudah untuk memberi cadangan, tetapi sukar untuk melaksanakannya." }, content_en: { story: `Mice were afraid of a cat 😼. A young mouse suggested hanging a bell 🔔 on the cat's neck to hear him coming. Everyone cheered. Then an old mouse asked, "Who will put the bell on?" No one was brave enough. They realized great ideas must be practical.`, moral: "Moral Value: It is easy to suggest ideas, but difficult to carry them out." } },
@@ -300,7 +305,14 @@
             try { await html2pdf().set(opt).from(element).save(); } finally { wrapper.style.left = '-9999px'; hideLoading(); }
         }
 
-        function speak(w, l) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(w); u.lang = (l === 'ms' ? 'ms-MY' : 'en-US'); u.rate = 0.9; window.speechSynthesis.speak(u); }
+        function speak(w, l) { 
+            window.speechSynthesis.cancel(); 
+            const u = new SpeechSynthesisUtterance(w); 
+            u.lang = (l === 'ms' ? 'ms-MY' : 'en-US'); 
+            u.rate = 0.9;
+            window.speechSynthesis.speak(u); 
+        }
+
         function closeStory() { document.getElementById('story-display-area').classList.add('hidden'); clearInterval(readingTimer); }
         function showLoading(m) { document.getElementById('loading-overlay').style.display = 'flex'; document.getElementById('loading-text').innerText = m; }
         function hideLoading() { document.getElementById('loading-overlay').style.display = 'none'; }
@@ -320,17 +332,21 @@
         }
         function tutupAdmin() { document.getElementById('admin-panel').classList.add('hidden'); document.getElementById('login-section').classList.remove('hidden'); }
         async function tarikDataAdmin() {
-            const content = document.getElementById('admin-content'); content.innerHTML = `<p class="p-4 text-blue-600 animate-pulse text-xs font-bold uppercase">Menghubungi Google Sheets...</p>`;
+            const content = document.getElementById('admin-content'); content.innerHTML = `<p class="p-4 text-blue-600 animate-pulse text-xs font-bold uppercase text-center">Menghubungi Google Sheets...</p>`;
             try {
                 const res = await fetch(`${SCRIPT_URL}?action=admin_fetch`); const data = await res.json();
-                if (data.length === 0) { content.innerHTML = `<p class="p-4 text-red-500 font-bold">Tiada rekod.</p>`; return; }
+                if (data.length === 0) { content.innerHTML = `<p class="p-4 text-red-500 font-bold text-center">Tiada rekod.</p>`; return; }
                 let html = `<table class="admin-table"><thead><tr><th>Nama Murid</th><th>Buku Dibaca</th></tr></thead><tbody>`;
                 data.forEach(m => { html += `<tr><td>${m.nama}</td><td><b>${m.jumlah}</b> / 23</td></tr>`; });
                 html += `</tbody></table>`; content.innerHTML = html;
-            } catch (e) { content.innerHTML = `<p class="p-4 text-red-500 text-xs">Gagal menarik data. Semak AppScript Deployment.</p>`; }
+            } catch (e) { content.innerHTML = `<p class="p-4 text-red-500 text-xs text-center uppercase font-bold">Gagal menarik data. Sila semak Apps Script Deployment.</p>`; }
         }
 
-        if (currentUser) { document.getElementById('input-name').value = currentUser; startApp(); }
+        // AUTO LOGIN CHECK
+        if (currentUser) { 
+            document.getElementById('input-name').value = currentUser; 
+            startApp(); 
+        }
     </script>
 </body>
 </html>
